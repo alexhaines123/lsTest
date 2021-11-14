@@ -1,3 +1,5 @@
+import { PlacesAutocomplete } from './models';
+
 export interface FormValuesContext {
   departureDate: string;
   departureTime: string;
@@ -6,17 +8,23 @@ export interface FormValuesContext {
   returnTime: string;
 
   journeyOriginText: string;
-  journeyOriginLong: string;
-  journeyOriginLat: string;
+  journeyOriginLong: number;
+  journeyOriginLat: number;
 
   journeyDestText: string;
-  journeyDestLong: string;
-  journeyDestLat: string;
+  journeyDestLong: number;
+  journeyDestLat: number;
 }
 
 export interface LocationOptionsContext {
   loading: boolean;
   error: boolean;
-  data: any[];
-  data2: any[];
+  data: PlacesAutocomplete[];
+  data2: PlacesAutocomplete[];
+}
+
+export interface FormSubmitContext {
+  loading: boolean;
+  error: boolean;
+  success: boolean;
 }
