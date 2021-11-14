@@ -1,25 +1,25 @@
-import logo from './logo.svg';
+import React from 'react';
+
+import { FormValuesProvider } from './contexts/form-values';
+import { LocationOptionsProvider } from './contexts/location-options';
+import { FormSubmitProvider } from './contexts/form-submit';
+
 import './App.css';
 
-function App() {
+import { View } from './containers/View';
+
+const App: React.FC = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <FormSubmitProvider>
+        <FormValuesProvider>
+          <LocationOptionsProvider>
+            <View />
+          </LocationOptionsProvider>
+        </FormValuesProvider>
+      </FormSubmitProvider>
+    </>
   );
-}
+};
 
 export default App;

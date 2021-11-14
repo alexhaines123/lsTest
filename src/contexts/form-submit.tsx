@@ -2,18 +2,17 @@ import React, { createContext, useContext, useReducer } from 'react';
 
 import { Record } from 'immutable';
 
-import { getPlacesAutocomplete } from '../apis/';
+import { createJourney } from '../apis/';
 
-import { LocationOptionsContext } from '../types/contexts';
+import { FormSubmitContext, FormValuesContext } from '../types/contexts';
 
-const initialContext: LocationOptionsContext = {
+const initialContext: FormSubmitContext = {
   loading: false,
   error: false,
-  data: [],
-  data2: [],
+  success: false,
 };
 
-type ActionTypes = 'data' | 'data2' | 'loading' | 'error' | 'resetState';
+type ActionTypes = 'loading' | 'error' | 'success' | 'resetState';
 type Dispatch = (opts: Action) => void;
 type ContextRecordType = typeof ContextRecordInst;
 
@@ -22,14 +21,14 @@ interface Action {
   value?: any[] | boolean;
 }
 
-export interface LocationOptionsContextType {
-  locationOptions: ContextRecordType;
-  locationOptionsDispatch: Dispatch;
+export interface FormSubmitContextType {
+  formSubmit: ContextRecordType;
+  formSubmitDispatch: Dispatch;
 }
 
 const ContextRecord = Record(initialContext);
 const ContextRecordInst = new ContextRecord();
-const Context = createContext<LocationOptionsContextType>(undefined!);
+const Context = createContext<FormSubmitContextType>(undefined!);
 
 const Reducer = (state: ContextRecordType, action: Action) => {
   switch (action.type) {
@@ -37,12 +36,8 @@ const Reducer = (state: ContextRecordType, action: Action) => {
       return state.set('loading', true);
     case 'error':
       return state.set('error', true);
-    case 'data':
-      // @ts-ignore
-      return state.set('data', action.value);
-    case 'data2':
-      // @ts-ignore
-      return state.set('data2', action.value);
+    case 'success':
+      return state.set('success', true);
     case 'resetState':
       return ContextRecordInst;
     default:
@@ -50,31 +45,30 @@ const Reducer = (state: ContextRecordType, action: Action) => {
   }
 };
 
-export const loadLocationOptions = async (
+export const submitForm = async (
   dispatch: Dispatch,
-  input: string,
-  type: 'data' | 'data2',
+  formValues: FormValuesContext,
 ) => {
   dispatch({ type: 'loading', value: true });
   dispatch({ type: 'error', value: false });
   try {
-    const res = await getPlacesAutocomplete({ input });
-    dispatch({ type, value: res });
+    await createJourney(formValues);
     dispatch({ type: 'loading', value: false });
+    dispatch({ type: 'success', value: true });
   } catch (e) {
-    dispatch({ type: 'error', value: true });
     dispatch({ type: 'loading', value: false });
+    dispatch({ type: 'success', value: true });
   }
 };
 
-export const LocationOptionsProvider: React.FC = ({ children }) => {
-  const [locationOptions, locationOptionsDispatch] = useReducer(
+export const FormSubmitProvider: React.FC = ({ children }) => {
+  const [formSubmit, formSubmitDispatch] = useReducer(
     Reducer,
     ContextRecordInst,
   );
 
-  const value = { locationOptions, locationOptionsDispatch };
+  const value = { formSubmit, formSubmitDispatch };
   return <Context.Provider value={value}>{children}</Context.Provider>;
 };
 
-export const useLocationOptionsContext = () => useContext(Context);
+export const useFormSubmitContext = () => useContext(Context);
