@@ -4,7 +4,11 @@ import { GoogleMap, useJsApiLoader, Marker } from '@react-google-maps/api';
 
 import { Box } from '@material-ui/core';
 
-import { API_KEYS } from '../apis/';
+const { REACT_APP_GOOGLE_API_KEY } = process.env;
+
+if (!REACT_APP_GOOGLE_API_KEY) {
+  throw new Error('Env vars not defined');
+}
 
 interface MapProps {
   origin: {
@@ -34,7 +38,7 @@ const center = ({ origin, dest }: MapProps) => {
 export const Map: React.FC<MapProps> = memo(({ origin, dest }) => {
   const { isLoaded } = useJsApiLoader({
     id: 'google-map-script',
-    googleMapsApiKey: API_KEYS.GOOGLE,
+    googleMapsApiKey: REACT_APP_GOOGLE_API_KEY,
   });
 
   const [map, setMap] = useState<any>(null);
