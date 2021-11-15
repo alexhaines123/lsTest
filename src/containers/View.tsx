@@ -1,5 +1,7 @@
 import React from 'react';
 
+import { Helmet } from 'react-helmet';
+
 import { Container, Grid, Typography, Box } from '@material-ui/core';
 
 import { useFormValuesContext } from '../contexts/form-values';
@@ -23,6 +25,9 @@ export const View = () => {
   const success = formSubmit.success;
   return (
     <>
+      <Helmet>
+        <title>Create a new Journey - Liftshare</title>
+      </Helmet>
       <Box mb={2}>
         <NavBar />
       </Box>
